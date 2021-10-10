@@ -27,11 +27,16 @@ if __name__ == '__main__':
     # Does the visualization agree with your intuitions and the between-class distance matrix distij?
 
 
-    # PCA  # https://www.datacamp.com/community/tutorials/principal-component-analysis-in-python
+    # PCA  # https://towardsdatascience.com/pca-using-python-scikit-learn-e653f8989e60
+    ## normalize
 
-    # LLE
+    ## PCA
 
-    # t-SNE
+
+
+    # LLE   # https://scikit-learn.org/stable/modules/generated/sklearn.manifold.LocallyLinearEmbedding.html
+
+    # t-SNE  # https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
 
     # visualization
 

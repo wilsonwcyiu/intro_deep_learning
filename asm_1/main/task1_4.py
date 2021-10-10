@@ -33,6 +33,7 @@ if __name__ == '__main__':
     ## Describe your ndings, compare performance of your classiers on the train and test sets.
 
 
+
     digit_mean_dict: dict = {}
     for i in range(len(train_in_data_list)):
         train_in_data = train_in_data_list[i]
@@ -47,7 +48,6 @@ if __name__ == '__main__':
 
 
 
+    # KNN
 
-    # mean of each vector for each digit
-
-    # calculate distance
+    # confusion matrix

@@ -98,7 +98,7 @@ if __name__ == '__main__':
         input_data_str_list: list = train_in_data_str.split(",");                       #print(type(input_data_list));  print(input_data_list);
         input_data_list: list = convert_str_list_to_float_list(input_data_str_list);    #print(type(input_data_list));  print(input_data_list);
 
-        output_result: list = float(train_out_data_list[i])
+        output_result: list = int(train_out_data_list[i])
 
         digit_data_dict[output_result].input_data_list_list.append(input_data_list)
 
