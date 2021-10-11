@@ -1,21 +1,9 @@
 import matplotlib
 import numpy as np
-import h5py
+# import h5py
 import matplotlib.pyplot as plt
-from testCases_v4a import *
-from dnn_utils_v2 import sigmoid, sigmoid_backward, relu, relu_backward
-
-# %matplotlib inline
-plt.rcParams['figure.figsize'] = (5.0, 4.0) # set default size of plots
-plt.rcParams['image.interpolation'] = 'nearest'
-plt.rcParams['image.cmap'] = 'gray'
-
-# %load_ext autoreload
-# %autoreload 2
-
-np.random.seed(1)
-
-
+# from testCases_v4a import *
+# from dnn_utils_v2 import sigmoid, sigmoid_backward, relu, relu_backward
 
 
 # Implement the function xor net(x1; x2;weights) that simulates a network with
@@ -26,16 +14,7 @@ np.random.seed(1)
 # two other connections that are leading from the input nodes to a hidden node or from the two hidden nodes to the output node.
 # Assume that all non-input nodes use the sigmoid activation function.
 
-if __name__ == '__main__':
-    num_of_input_nodes: int = 2
-    num_of_hidden_nodes: int = 2
-    num_of_output_nodes: int = 1
 
-
-
-
-
-# GRADED FUNCTION: initialize_parameters
 
 def initialize_parameters(n_x, n_h, n_y):
     """
@@ -48,7 +27,7 @@ def initialize_parameters(n_x, n_h, n_y):
     parameters -- python dictionary containing your parameters:
                     W1 -- weight matrix of shape (n_h, n_x)
                     b1 -- bias vector of shape (n_h, 1)
-                    W2 -- weight matrix of shape (n_y, n_h)
+                    W2 -- weight m atrix of shape (n_y, n_h)
                     b2 -- bias vector of shape (n_y, 1)
     """
 
@@ -75,17 +54,6 @@ def initialize_parameters(n_x, n_h, n_y):
 
 
 
-parameters = initialize_parameters(3,2,1)
-print("W1 = " + str(parameters["W1"]))
-print("b1 = " + str(parameters["b1"]))
-print("W2 = " + str(parameters["W2"]))
-print("b2 = " + str(parameters["b2"]))
-
-
-
-
-
-# GRADED FUNCTION: initialize_parameters_deep
 def initialize_parameters_deep(layer_dims):
     """
     Arguments:
@@ -118,16 +86,6 @@ def initialize_parameters_deep(layer_dims):
 
 
 
-parameters = initialize_parameters_deep([5,4,3])
-print("W1 = " + str(parameters["W1"]))
-print("b1 = " + str(parameters["b1"]))
-print("W2 = " + str(parameters["W2"]))
-print("b2 = " + str(parameters["b2"]))
-
-
-
-# GRADED FUNCTION: linear_forward
-
 def linear_forward(A, W, b):
     """
     Implement the linear part of a layer's forward propagation.
@@ -152,15 +110,29 @@ def linear_forward(A, W, b):
     return Z, cache
 
 
+def sigmoid(z):
+    """
+    Compute the sigmoid of z
 
-A, W, b = linear_forward_test_case()
+    Arguments:
+    z -- A scalar or numpy array of any size.
 
-Z, linear_cache = linear_forward(A, W, b)
-print("Z = " + str(Z))
+    Return:
+    s -- sigmoid(z)
+    """
+
+    ### START CODE HERE ### (≈ 1 line of code)
+    s = 1 / (1 + np.exp(-z))
+    ### END CODE HERE ###
+
+    return s, z
 
 
 
-# GRADED FUNCTION: linear_activation_forward
+def relu(z_matrix):
+    raise Exception("relu to be completed")
+    # return 1
+
 
 def linear_activation_forward(A_prev, W, b, activation):
     """
@@ -197,19 +169,6 @@ def linear_activation_forward(A_prev, W, b, activation):
 
     return A, cache
 
-
-
-A_prev, W, b = linear_activation_forward_test_case()
-
-A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "sigmoid")
-print("With sigmoid: A = " + str(A))
-
-A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "relu")
-print("With ReLU: A = " + str(A))
-
-
-
-# GRADED FUNCTION: L_model_forward
 
 def L_model_forward(X, parameters):
     """
@@ -250,14 +209,6 @@ def L_model_forward(X, parameters):
     return AL, caches
 
 
-X, parameters = L_model_forward_test_case_2hidden()
-AL, caches = L_model_forward(X, parameters)
-print("AL = " + str(AL))
-print("Length of caches list = " + str(len(caches)))
-
-
-
-# GRADED FUNCTION: compute_cost
 
 def compute_cost(AL, Y):
     """
@@ -284,12 +235,6 @@ def compute_cost(AL, Y):
     return cost
 
 
-Y, AL = compute_cost_test_case()
-
-print("cost = " + str(compute_cost(AL, Y)))
-
-
-# GRADED FUNCTION: linear_backward
 
 def linear_backward(dZ, cache):
     """
@@ -321,18 +266,6 @@ def linear_backward(dZ, cache):
 
 
 
-# Set up some test inputs
-dZ, linear_cache = linear_backward_test_case()
-
-dA_prev, dW, db = linear_backward(dZ, linear_cache)
-print ("dA_prev = "+ str(dA_prev))
-print ("dW = " + str(dW))
-print ("db = " + str(db))
-
-
-
-# GRADED FUNCTION: linear_activation_backward
-
 def linear_activation_backward(dA, cache, activation):
     """
     Implement the backward propagation for the LINEAR->ACTIVATION layer.
@@ -350,39 +283,117 @@ def linear_activation_backward(dA, cache, activation):
     linear_cache, activation_cache = cache
 
     if activation == "relu":
+        raise Exception("not ready")
         ### START CODE HERE ### (≈ 2 lines of code)
-        dZ = relu_backward(dA, activation_cache)
-        dA_prev, dW, db = linear_backward(dZ, linear_cache)
+        # dZ = relu_backward(dA, activation_cache)
+        # dA_prev, dW, db = linear_backward(dZ, linear_cache)
         ### END CODE HERE ###
 
     elif activation == "sigmoid":
         ### START CODE HERE ### (≈ 2 lines of code)
-        dZ = sigmoid_backward(dA, activation_cache)
+        # dZ = sigmoid_backward(dA, activation_cache)
+
+        #inverse sigmoid
+        #https://stackoverflow.com/questions/10097891/inverse-logistic-function-reverse-sigmoid-function
+        # print(dA.shape)
+        # print(type(dA))
+        # print(dA)
+        #
+        # print(np.array([1,2,3,4]).shape)
+
+        data_list = []
+        for tmp_list in dA:
+            for tmp in tmp_list:
+                tmp_dz: float = np.log(tmp / (1-tmp))
+                data_list.append(tmp_dz)
+
+        dZ = np.array([data_list])
+
+        print(dZ)
+        # dZ = -np.log((1 / (dA + 1 * np.exp(-8)) - 1))
         dA_prev, dW, db = linear_backward(dZ, linear_cache)
         ### END CODE HERE ###
 
 
-    print("db" ,db)
+    # print("db" ,db)
     return dA_prev, dW, db
 
 
-dAL, linear_activation_cache = linear_activation_backward_test_case()
+
+#**
+# def backward_propagation(parameters, cache, X, Y):
+#     """
+#     Implement the backward propagation using the instructions above.
+#
+#     Arguments:
+#     parameters -- python dictionary containing our parameters
+#     cache -- a dictionary containing "Z1", "A1", "Z2" and "A2".
+#     X -- input data of shape (2, number of examples)
+#     Y -- "true" labels vector of shape (1, number of examples)
+#
+#     Returns:
+#     grads -- python dictionary containing your gradients with respect to different parameters
+#     """
+#     m = X.shape[1]
+#
+#     # First, retrieve W1 and W2 from the dictionary "parameters".
+#     ### START CODE HERE ### (≈ 2 lines of code)
+#     W1 = parameters["W1"]
+#     W2 = parameters["W2"]
+#     ### END CODE HERE ###
+#
+#     # Retrieve also A1 and A2 from dictionary "cache".
+#     ### START CODE HERE ### (≈ 2 lines of code)
+#     A1 = cache["A1"]
+#     A2 = cache["A2"]
+#     ### END CODE HERE ###
+#
+#     # Backward propagation: calculate dW1, db1, dW2, db2.
+#     ### START CODE HERE ### (≈ 6 lines of code, corresponding to 6 equations on slide above)
+#     dZ2 = A2 - Y
+#     dW2 = (1/m) * np.dot(dZ2, A1.T)
+#     db2 = (1/m) * np.sum(dZ2, axis=1, keepdims=True)
+#     dZ1 = np.dot(W2.T, dZ2) * (1 - np.power(A1,2))
+#     dW1 = (1/m) * np.dot(dZ1, X.T)
+#     db1 = (1/m) * np.sum(dZ1, axis=1, keepdims=True)
+#     ### END CODE HERE ###
+#
+#     grads = {"dW1": dW1,
+#              "db1": db1,
+#              "dW2": dW2,
+#              "db2": db2}
+#
+#     return grads
 
 
-dA_prev, dW, db = linear_activation_backward(dAL, linear_activation_cache, activation = "sigmoid")
-print ("sigmoid:")
-print ("dA_prev = "+ str(dA_prev))
-print ("dW = " + str(dW))
-print ("db = " + str(db) + "\n")
 
-dA_prev, dW, db = linear_activation_backward(dAL, linear_activation_cache, activation = "relu")
-print ("relu:")
-print ("dA_prev = "+ str(dA_prev))
-print ("dW = " + str(dW))
-print ("db = " + str(db))
+def update_parameters(parameters, grads, learning_rate):
+    """
+    Update parameters using gradient descent
+
+    Arguments:
+    parameters -- python dictionary containing your parameters
+    grads -- python dictionary containing your gradients, output of L_model_backward
+
+    Returns:
+    parameters -- python dictionary containing your updated parameters
+                  parameters["W" + str(l)] = ...
+                  parameters["b" + str(l)] = ...
+    """
+
+    L = len(parameters) // 2 # number of layers in the neural network
+
+    # Update rule for each parameter. Use a for loop.
+    ### START CODE HERE ### (≈ 3 lines of code)
+    for l in range(L):
+        parameters["W" + str(l+1)] = parameters["W" + str(l+1)] - grads["dW" + str(l+1)] * learning_rate
+        parameters["b" + str(l+1)] = parameters["b" + str(l+1)] - grads["db" + str(l+1)] * learning_rate
+    ### END CODE HERE ###
+
+    return parameters
 
 
-# GRADED FUNCTION: L_model_backward
+
 
 def L_model_backward(AL, Y, caches):
     """
@@ -434,44 +445,256 @@ def L_model_backward(AL, Y, caches):
     return grads
 
 
-AL, Y_assess, caches = L_model_backward_test_case()
-grads = L_model_backward(AL, Y_assess, caches)
-print_grads(grads)
 
 
-
-# GRADED FUNCTION: update_parameters
-
-def update_parameters(parameters, grads, learning_rate):
+def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
     """
-    Update parameters using gradient descent
+    Implements a two-layer neural network: LINEAR->RELU->LINEAR->SIGMOID.
 
     Arguments:
-    parameters -- python dictionary containing your parameters
-    grads -- python dictionary containing your gradients, output of L_model_backward
+    X -- input data, of shape (n_x, number of examples)
+    Y -- true "label" vector (containing 1 if cat, 0 if non-cat), of shape (1, number of examples)
+    layers_dims -- dimensions of the layers (n_x, n_h, n_y)
+    num_iterations -- number of iterations of the optimization loop
+    learning_rate -- learning rate of the gradient descent update rule
+    print_cost -- If set to True, this will print the cost every 100 iterations
 
     Returns:
-    parameters -- python dictionary containing your updated parameters
-                  parameters["W" + str(l)] = ...
-                  parameters["b" + str(l)] = ...
+    parameters -- a dictionary containing W1, W2, b1, and b2
     """
 
-    L = len(parameters) // 2 # number of layers in the neural network
+    np.random.seed(1)
+    grads = {}
+    costs = []                              # to keep track of the cost
+    m = X.shape[1]                           # number of examples
+    (n_x, n_h, n_y) = layers_dims
 
-    # Update rule for each parameter. Use a for loop.
-    ### START CODE HERE ### (≈ 3 lines of code)
-    for l in range(L):
-        parameters["W" + str(l+1)] = parameters["W" + str(l+1)] - grads["dW" + str(l+1)] * learning_rate
-        parameters["b" + str(l+1)] = parameters["b" + str(l+1)] - grads["db" + str(l+1)] * learning_rate
+    # Initialize parameters dictionary, by calling one of the functions you'd previously implemented
+    ### START CODE HERE ### (≈ 1 line of code)
+    parameters = initialize_parameters(n_x, n_h, n_y)
     ### END CODE HERE ###
+
+    # Get W1, b1, W2 and b2 from the dictionary parameters.
+    W1 = parameters["W1"]
+    b1 = parameters["b1"]
+    W2 = parameters["W2"]
+    b2 = parameters["b2"]
+
+    # Loop (gradient descent)
+
+    for i in range(0, num_iterations):
+
+        # Forward propagation: LINEAR -> RELU -> LINEAR -> SIGMOID. Inputs: "X, W1, b1, W2, b2". Output: "A1, cache1, A2, cache2".
+        ### START CODE HERE ### (≈ 2 lines of code)
+        A1, cache1 = linear_activation_forward(X, W1, b1, activation = "sigmoid")
+        A2, cache2 = linear_activation_forward(A1, W2, b2, activation = "sigmoid")
+        ### END CODE HERE ###
+
+        # Compute cost
+        ### START CODE HERE ### (≈ 1 line of code)
+        cost = compute_cost(A2, Y)
+        ### END CODE HERE ###
+
+        # Initializing backward propagation
+        # dA2 = - (np.divide(Y, A2) - np.divide(1 - Y, 1 - A2))
+        dA2 = A2
+
+
+        print(dA2)
+        # Backward propagation. Inputs: "dA2, cache2, cache1". Outputs: "dA1, dW2, db2; also dA0 (not used), dW1, db1".
+        ### START CODE HERE ### (≈ 2 lines of code)
+        dA1, dW2, db2 = linear_activation_backward(dA2, cache2, activation = "sigmoid")
+        dA0, dW1, db1 = linear_activation_backward(dA1, cache1, activation = "sigmoid")
+        ### END CODE HERE ###
+
+        # Set grads['dWl'] to dW1, grads['db1'] to db1, grads['dW2'] to dW2, grads['db2'] to db2
+        grads['dW1'] = dW1
+        grads['db1'] = db1
+        grads['dW2'] = dW2
+        grads['db2'] = db2
+
+        # Update parameters.
+        ### START CODE HERE ### (approx. 1 line of code)
+        parameters = update_parameters(parameters, grads, learning_rate)
+        ### END CODE HERE ###
+
+        # Retrieve W1, b1, W2, b2 from parameters
+        W1 = parameters["W1"]
+        b1 = parameters["b1"]
+        W2 = parameters["W2"]
+        b2 = parameters["b2"]
+
+        # Print the cost every 100 training example
+        if print_cost and i % 100 == 0:
+            print("Cost after iteration {}: {}".format(i, np.squeeze(cost)))
+        if print_cost and i % 100 == 0:
+            costs.append(cost)
+
+    # plot the cost
+
+    plt.plot(np.squeeze(costs))
+    plt.ylabel('cost')
+    plt.xlabel('iterations (per hundreds)')
+    plt.title("Learning rate =" + str(learning_rate))
+    plt.show()
+
     return parameters
 
 
+if __name__ == '__main__':
 
-parameters, grads = update_parameters_test_case()
-parameters = update_parameters(parameters, grads, 0.1)
 
-print ("W1 = "+ str(parameters["W1"]))
-print ("b1 = "+ str(parameters["b1"]))
-print ("W2 = "+ str(parameters["W2"]))
-print ("b2 = "+ str(parameters["b2"]))
+    # # %matplotlib inline
+    # plt.rcParams['figure.figsize'] = (5.0, 4.0) # set default size of plots
+    # plt.rcParams['image.interpolation'] = 'nearest'
+    # plt.rcParams['image.cmap'] = 'gray'
+    #
+    # # %load_ext autoreload
+    # # %autoreload 2
+    #
+    # np.random.seed(1)
+
+
+    num_of_input_nodes: int = 3
+    num_of_hidden_nodes: int = 3
+    num_of_output_nodes: int = 1
+
+
+    print("\ninitialize_parameters")
+    parameters = initialize_parameters(num_of_input_nodes, num_of_hidden_nodes, num_of_output_nodes)
+    print("W1 = " + str(parameters["W1"]))
+    print("b1 = " + str(parameters["b1"]))
+    print("W2 = " + str(parameters["W2"]))
+    print("b2 = " + str(parameters["b2"]))
+
+
+
+    print("\ninitialize_parameters_deep")
+    parameters = initialize_parameters_deep([3, 3, 1])
+    print("W1 = " + str(parameters["W1"]))
+    print("b1 = " + str(parameters["b1"]))
+    print("W2 = " + str(parameters["W2"]))
+    print("b2 = " + str(parameters["b2"]))
+
+
+
+    # A, W, b = linear_forward_test_case()
+    # Z, linear_cache = linear_forward(A, W, b)
+    # print("Z = " + str(Z))
+
+
+    #
+    # A_prev, W, b = linear_activation_forward_test_case()
+    #
+    # A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "sigmoid")
+    # print("With sigmoid: A = " + str(A))
+    #
+    # A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "relu")
+    # print("With ReLU: A = " + str(A))
+    #
+    #
+    #
+
+    #
+    # X, parameters = L_model_forward_test_case_2hidden()
+    # AL, caches = L_model_forward(X, parameters)
+    # print("AL = " + str(AL))
+    # print("Length of caches list = " + str(len(caches)))
+    #
+
+
+    #
+    # Y, AL = compute_cost_test_case()
+    #
+    # print("cost = " + str(compute_cost(AL, Y)))
+
+
+    #
+    # # Set up some test inputs
+    # dZ, linear_cache = linear_backward_test_case()
+    #
+    # dA_prev, dW, db = linear_backward(dZ, linear_cache)
+    # print ("dA_prev = "+ str(dA_prev))
+    # print ("dW = " + str(dW))
+    # print ("db = " + str(db))
+    #
+    #
+    #
+    # # GRADED FUNCTION: linear_activation_backward
+    #
+
+    #
+    # dAL, linear_activation_cache = linear_activation_backward_test_case()
+    #
+    #
+    # dA_prev, dW, db = linear_activation_backward(dAL, linear_activation_cache, activation = "sigmoid")
+    # print ("sigmoid:")
+    # print ("dA_prev = "+ str(dA_prev))
+    # print ("dW = " + str(dW))
+    # print ("db = " + str(db) + "\n")
+
+    # dA_prev, dW, db = linear_activation_backward(dAL, linear_activation_cache, activation = "relu")
+    # print ("relu:")
+    # print ("dA_prev = "+ str(dA_prev))
+    # print ("dW = " + str(dW))
+    # print ("db = " + str(db))
+    #
+
+
+    #
+    # AL, Y_assess, caches = L_model_backward_test_case()
+    # grads = L_model_backward(AL, Y_assess, caches)
+    # print_grads(grads)
+    #
+
+
+    #
+    # parameters, grads = update_parameters_test_case()
+    # parameters = update_parameters(parameters, grads, 0.1)
+    #
+    # print ("W1 = "+ str(parameters["W1"]))
+    # print ("b1 = "+ str(parameters["b1"]))
+    # print ("W2 = "+ str(parameters["W2"]))
+    # print ("b2 = "+ str(parameters["b2"]))
+
+
+
+    # Explore your dataset
+    # m_train = train_x_orig.shape[0]
+    # num_px = train_x_orig.shape[1]
+    # m_test = test_x_orig.shape[0]
+
+
+    list_of_data_list: list = []
+
+    # data_list: list = []   # bias_1, x1, x2, output
+    list_of_data_list.append([1, 0, 0, 0])
+    list_of_data_list.append([1, 0, 1, 1])
+    list_of_data_list.append([1, 1, 0, 1])
+    list_of_data_list.append([1, 1, 1, 0])
+
+
+    # Reshape the training and test examples
+    # Standardize data to have feature values between 0 and 1.
+    train_x = np.array([
+                        [1,0,0],
+                        [1,0,1],
+                        [1,1,0],
+                        [1,1,1]
+                    ]).T
+    print ("train_x's shape: " + str(train_x.shape))
+    print(train_x)
+
+    train_y = np.array([[0, 1, 1, 0]])
+
+    # print ("test_x's shape: " + str(test_x.shape))
+
+
+    ### CONSTANTS DEFINING THE MODEL ####
+    n_x = 3     # num_px * num_px * 3
+    n_h = 3
+    n_y = 1
+    layers_dims = (n_x, n_h, n_y)
+
+
+    parameters = two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 1000, print_cost=True)
