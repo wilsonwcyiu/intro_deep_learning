@@ -1,5 +1,7 @@
 from collections import Counter
 
+import numpy as np
+
 from sklearn.decomposition import PCA
 from sklearn.manifold import LocallyLinearEmbedding, TSNE
 
@@ -34,7 +36,7 @@ def load(filename: str) -> np.ndarray:
     return np.genfromtxt(filename, delimiter=',')
 
 
-def most_frequent(List):
+def get_most_frequent_item(List):
     occurence_count = Counter(List)
     return occurence_count.most_common(1)[0][0]
 
