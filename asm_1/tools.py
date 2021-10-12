@@ -43,16 +43,16 @@ def get_k_smallest_elements(k, array):
     return np.argsort(array)[1:k+1]
 
 
-def apply_tSNE(data: np.ndarray, dim: int) -> np.ndarray:
-    tsne = TSNE(n_components=dim)
+def apply_tSNE(data: np.ndarray, output_dimension: int) -> np.ndarray:
+    tsne = TSNE(n_components=output_dimension)
     return tsne.fit_transform(data)
 
 
-def apply_LLE(data: np.ndarray, dim: int) -> np.ndarray:
-    lle = LocallyLinearEmbedding(n_components=dim)
+def apply_LLE(data: np.ndarray, output_dimension: int) -> np.ndarray:
+    lle = LocallyLinearEmbedding(n_components=output_dimension)
     return lle.fit_transform(data)
 
 
-def apply_PCA(data: np.ndarray, dim: int) -> np.ndarray:
-    pca = PCA(n_components=dim)
+def apply_PCA(data: np.ndarray, output_dimension: int) -> np.ndarray:
+    pca = PCA(n_components=output_dimension)
     return pca.fit_transform(data)
