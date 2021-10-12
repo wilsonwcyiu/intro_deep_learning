@@ -77,8 +77,10 @@ if __name__ == '__main__':
         # one_result =
         # feedforward step1
 
-        train_set = np.array([all_train_set[idx]]);                  # print("train_set shape", train_set.shape)
-        y_label = np.array([all_y_label[idx]]);                       #print("y_label shape", y_label.shape)
+        # train_set = np.array([all_train_set[idx]]);                  # print("train_set shape", train_set.shape)
+        # y_label = np.array([all_y_label[idx]]);                       #print("y_label shape", y_label.shape)
+        train_set = all_train_set;                  # print("train_set shape", train_set.shape)
+        y_label = all_y_label;                       #print("y_label shape", y_label.shape)
 
         z1: np.array = np.dot(train_set, hidden_layer_W);           #print("z1 shape", z1.shape)
         z1 += hidden_layer_bias
