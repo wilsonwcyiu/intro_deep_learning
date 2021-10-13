@@ -44,9 +44,7 @@ if __name__ == '__main__':
     lr = 0.05
 
 
-    for epoch in range(200000):
-        # inputs: np.array = feature_set
-        # print(inputs)
+    for _ in range(200000):
 
 
         # feedforward step1
@@ -63,10 +61,10 @@ if __name__ == '__main__':
         print(error.sum())
 
         # backpropagation step 2
-        dcost_dpred: np.array = error
-        dpred_dz: np.array = sigmoid_derivative(yhat_activation)
+        derivative_cost_over_derivative_dpred: np.array = error
+        derivative_pred_over_derivative_z: np.array = sigmoid_derivative(yhat_activation)
 
-        z_delta: np.array = dcost_dpred * dpred_dz
+        z_delta: np.array = derivative_cost_over_derivative_dpred * derivative_pred_over_derivative_z
         # print("z_delta: ", z_delta)
 
         inputs = feature_set.T
