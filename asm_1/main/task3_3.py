@@ -27,9 +27,10 @@ def sigmoid_derivative(x):
 
 
 if __name__ == '__main__':
+    fixed_bias_1: int = 1
 
     all_train_set: np.array = np.array([
-        [1,0,0],[1,0,1],[1,1,0],[1,1,1]
+        [fixed_bias_1,0,0],[fixed_bias_1,0,1],[fixed_bias_1,1,0],[fixed_bias_1,1,1]
     ]);
     all_y_label: np.array = np.array([[
         0, 1, 1, 0
@@ -60,8 +61,7 @@ if __name__ == '__main__':
         # feedforward from hidden layer to output layer
         # add 1 bias input as required from assignment
         loc: int = 0
-        bias: int = 1
-        a1 = np.insert(a1, loc, bias, axis=1);              #print(">>a1", a1)
+        a1 = np.insert(a1, loc, fixed_bias_1, axis=1);              #print(">>a1", a1)
 
         z2: np.array = np.dot(a1, output_layer_W);           #print("z2", z2)
         a2_yhat_activation: np.array = sigmoid(z2);                        #print("a2_yhat_activation", a2)
