@@ -8,7 +8,6 @@ import tools
 def main():
     train_in, train_out = tools.load_training_set()
     test_in, test_out = tools.load_test_set()
-    # learning_rates = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]
     learning_rates = [0.01]
     for lr in learning_rates:
         slp = SingleLayerPerceptron(lr, train_in, train_out, test_in, test_out)
@@ -141,8 +140,8 @@ class SingleLayerPerceptron:
 
     @staticmethod
     def calculate_activations(X, W):
-        activation_matrix = np.matmul(X, W)
-        return SingleLayerPerceptron._sigmoid(activation_matrix)
+        net_activation = np.matmul(X, W)
+        return SingleLayerPerceptron._sigmoid(net_activation)
 
 
     @staticmethod
