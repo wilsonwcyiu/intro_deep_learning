@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 # Assume that all non-input nodes use the sigmoid activation function.
 
 
-def sigmoid(z: float):
-    return float(1/(1 + np.exp(-z)))
+def sigmoid(z: np.array):
+    return 1/(1 + np.exp(-z))
 
 
 def sigmoid_derivative(activation: np.array):
@@ -38,50 +38,53 @@ def mse(weights_1: list, weight2: list):
 
 
 
-def grdmse(lost: float, yhat: float, activation_array: np.array):
-    # output layer to hidden layer grd
-    dcost_dpred: np.array = lost;
-    # dpred_dz: np.array = sigmoid_derivative([activation_array[6], activation_array[7], activation_array[8]]);
-
-    # grdmse_activation_delta: np.array = dcost_dpred * dpred_dz;                             #print("z_delta.shape", z_delta.shape)
+def grdmse(cost: float, yhat_list: float, activation_record_list: list):
+    dcost_dpred: float = cost
 
     weight_vector_grd: list = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    weight_vector_grd[6] = dcost_dpred * sigmoid_derivative(yhat)
-    weight_vector_grd[7] = dcost_dpred * sigmoid_derivative(yhat)
-    weight_vector_grd[8] = dcost_dpred * sigmoid_derivative(yhat)
 
+    for idx in range(0, len(yhat_list)):
+        # output layer to hidden layer grd
+        weight_vector_grd[6] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
+        weight_vector_grd[7] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
+        weight_vector_grd[8] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
 
-    # hidden layer to input layer grd
-    # neural_1_lost: float = activation_array[7] -
-    # dcost_dpred: np.array = lost;
-    # # dpred_dz: np.array = , activation_array[7], activation_array[8]]);
-    #
-    # weight_vector_grd[6] = dcost_dpred * sigmoid_derivative(activation_array[6])
-    # weight_vector_grd[7] = dcost_dpred * sigmoid_derivative(activation_array[7])
-    # weight_vector_grd[8] = dcost_dpred * sigmoid_derivative(activation_array[8])
-    weight_vector_grd[0] = dcost_dpred * sigmoid_derivative(activation_array[7])
-    weight_vector_grd[1] = dcost_dpred * sigmoid_derivative(activation_array[8])
-    weight_vector_grd[2] = dcost_dpred * sigmoid_derivative(activation_array[7])
-    weight_vector_grd[3] = dcost_dpred * sigmoid_derivative(activation_array[8])
-    weight_vector_grd[4] = dcost_dpred * sigmoid_derivative(activation_array[7])
-    weight_vector_grd[5] = dcost_dpred * sigmoid_derivative(activation_array[8])
+        # hidden layer to input layer grd
+        activation_record = activation_record_list[idx]
+        weight_vector_grd[0] += dcost_dpred * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[1] += dcost_dpred * sigmoid_derivative(activation_record[8])
+        weight_vector_grd[2] += dcost_dpred * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[3] += dcost_dpred * sigmoid_derivative(activation_record[8])
+        weight_vector_grd[4] += dcost_dpred * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[5] += dcost_dpred * sigmoid_derivative(activation_record[8])
 
-    return np.array(weight_vector_grd)
+    return weight_vector_grd
 
 
 
-def xor_net(x1: int, x2: int, weight_vector: list):
-    # feedforward
-    neural_1_z: float = fixed_bias_1 * weight_vector[0] + x1 * weight_vector[1] + x2 * weight_vector[2]
-    neural_1_activation: float = sigmoid(neural_1_z)
+def xor_net(x1_list, x2_list, weight_vector: list):
+    activation_record_list: list = []
+    yhat_list: list = []
+    for idx in range(0, len(x1_list)):
+        x1 = x1_list[idx]
+        x2 = x2_list[idx]
 
-    neural_2_z: float = fixed_bias_1 * weight_vector[3] + x1 * weight_vector[4] + x2 * weight_vector[5]
-    neural_2_activation: float = sigmoid(neural_2_z)
+        # feedforward
+        neural_1_z: float = fixed_bias_1 * weight_vector[0] + x1 * weight_vector[1] + x2 * weight_vector[2]
+        neural_1_activation: float = sigmoid(neural_1_z)
 
-    output_neural_3_z: float = fixed_bias_1 * weight_vector[6] + neural_1_activation * weight_vector[7] + neural_2_activation * weight_vector[8]
-    output_activation: float = sigmoid(output_neural_3_z)
+        neural_2_z: float = fixed_bias_1 * weight_vector[3] + x1 * weight_vector[4] + x2 * weight_vector[5]
+        neural_2_activation: float = sigmoid(neural_2_z)
 
-    return output_activation
+        output_neural_3_z: float = fixed_bias_1 * weight_vector[6] + neural_1_activation * weight_vector[7] + neural_2_activation * weight_vector[8]
+        output_activation: float = sigmoid(output_neural_3_z)
+
+        yhat_list.append(output_activation)
+
+        activation_record: list = [fixed_bias_1, fixed_bias_1, x1, x1, x2, x2, fixed_bias_1, neural_1_activation, neural_2_activation]
+        activation_record_list.append(activation_record)
+
+    return yhat_list, activation_record_list
 
 
 
@@ -90,8 +93,8 @@ def xor_net(x1: int, x2: int, weight_vector: list):
 if __name__ == '__main__':
 
 
-
-    all_train_list: list = [[0,0],[0,1],[1,0],[1,1]]
+    x1: int = [0, 0, 1, 1]
+    x2: int = [0, 1, 1, 0]
     all_y_label_list: list = [0, 1, 1, 0]
 
     fixed_bias_1: int = 1
@@ -102,46 +105,27 @@ if __name__ == '__main__':
     lr = 0.001
     idx = 0
     for epoch in range(200000):
-
-        train_list = all_train_list[idx]
-        x1: int = train_list[0]
-        x2: int = train_list[1]
-
-        y_result: int = all_y_label_list[idx]
-
+        yhat_list, activation_record_list = xor_net(x1, x2, weight_vector)
 
         loss_list: float = []
-        for case in range(0,4):
-            idx += 1
-            if idx == 4:
-                idx = 0
-
-
-            yhat: float = xor_net(x1, x2, weight_vector)
-
-            loss: float = yhat - y_result;
-            loss_list.append(loss**2)
+        for loss_idx in range(0, len(yhat_list)):
+            loss: float = yhat_list[loss_idx] - all_y_label_list[loss_idx];
+            loss_list.append(loss)
 
         cost = np.sum(loss_list)/ len(loss_list);               print(cost)
 
-        neural_1_z: float = fixed_bias_1 * weight_vector[0] + x1 * weight_vector[1] + x2 * weight_vector[2]
-        neural_1_activation: float = sigmoid(neural_1_z)
+        gradient_vector = grdmse(cost, yhat_list, activation_record_list)
 
-        neural_2_z: float = fixed_bias_1 * weight_vector[3] + x1 * weight_vector[4] + x2 * weight_vector[5]
-        neural_2_activation: float = sigmoid(neural_2_z)
-
-        activation_record: np.array = np.array([fixed_bias_1, fixed_bias_1, x1, x1, x2, x2, fixed_bias_1, neural_1_activation, neural_2_activation])
-        gradient_vector = grdmse(cost, yhat, activation_record)
-
-        weight_vector[0] -= lr * fixed_bias_1 * gradient_vector[0]
-        weight_vector[1] -= lr * fixed_bias_1 * gradient_vector[1]
-        weight_vector[2] -= lr * x1 * gradient_vector[2]
-        weight_vector[3] -= lr * x1 * gradient_vector[3]
-        weight_vector[4] -= lr * x2 * gradient_vector[4]
-        weight_vector[5] -= lr * x2 * gradient_vector[5]
-        weight_vector[6] -= lr * fixed_bias_1 * gradient_vector[6]
-        weight_vector[7] -= lr * activation_record[7] * gradient_vector[7]
-        weight_vector[8] -= lr * activation_record[8] * gradient_vector[8]
+        for activation_record in activation_record_list:
+            weight_vector[0] -= lr * activation_record[0] * gradient_vector[0]
+            weight_vector[1] -= lr * activation_record[1] * gradient_vector[1]
+            weight_vector[2] -= lr * activation_record[2] * gradient_vector[2]
+            weight_vector[3] -= lr * activation_record[3] * gradient_vector[3]
+            weight_vector[4] -= lr * activation_record[4] * gradient_vector[4]
+            weight_vector[5] -= lr * activation_record[5] * gradient_vector[5]
+            weight_vector[6] -= lr * activation_record[6] * gradient_vector[6]
+            weight_vector[7] -= lr * activation_record[7] * gradient_vector[7]
+            weight_vector[8] -= lr * activation_record[8] * gradient_vector[8]
 
 
 
