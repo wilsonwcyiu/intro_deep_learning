@@ -195,13 +195,13 @@ class SingleLayerPerceptron:
 
 
     @staticmethod
-    def _sigmoid(x):
-        return 1/(1 + np.exp(-x))
+    def _sigmoid(z):
+        return 1/(1 + np.exp(-z))
 
 
     @staticmethod
-    def _sigmoid_der(sigmoid_x):
-        return sigmoid_x * (1-sigmoid_x)
+    def _sigmoid_der(sigmoid_z):
+        return sigmoid_z * (1-sigmoid_z)
 
 
 if __name__ == '__main__':
