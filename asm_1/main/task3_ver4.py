@@ -90,12 +90,12 @@ if __name__ == '__main__':
         output_layer_weight -= lr * np.dot(layer_1_activation.T, output_layer_activation_delta);       #print("output_layer_W.shape", output_layer_W.shape)
 
         for activation_delta in output_layer_activation_delta:
-            output_layer_weight -= lr * activation_delta
+            output_layer_bias -= lr * activation_delta
 
 
         # backpropagation from output layer to hidden layer
-        hidden_layer_error: np.array = layer_1_activation - output_layer_weight.T;       #print("hl_error.shape", hl_error.shape)
-        hidden_layer_dcost_dpred: np.array = lost_data_array;
+        hidden_layer_lost: np.array = layer_1_activation - output_layer_weight.T;       #print("hl_error.shape", hl_error.shape)
+        hidden_layer_dcost_dpred: np.array = hidden_layer_lost;
         hidden_layer_dpred_dz: np.array = sigmoid_derivative(layer_1_activation);     #print("hl_dpred_dz.shape", hl_dpred_dz.shape)
 
         hidden_layer_activation_delta: np.array = hidden_layer_dcost_dpred * hidden_layer_dpred_dz;                             #print("hl_z_delta.shape", hl_z_delta.shape)

@@ -18,15 +18,13 @@ if __name__ == '__main__':
 
 
     feature_set: np.array = np.array([
-        #[0,1,0],[0,0,1],[1,0,0],[1,1,0],
-        [1,1,1]])
+        [0,1,0],[0,0,1],[1,0,0],[1,1,0], [1,1,1]])
 
 
-    y_label: np.array = np.array([[
-        # 1, 0, 0, 1,
-        1]])
-    # y_label: np.array = y_label.reshape(5, 1)
-    y_label: np.array = y_label.reshape(1, 1)
+    y_label: np.array = np.array([[1, 0, 0, 1, 1]])
+
+    num_of_y_label: int = y_label.shape[1]
+    y_label: np.array = y_label.reshape(num_of_y_label, 1)
 
     np.random.seed(42)
     weights: np.array = np.random.rand(3,1)
