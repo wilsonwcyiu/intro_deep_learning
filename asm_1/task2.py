@@ -1,22 +1,31 @@
+from copy import deepcopy
 import time
 from matplotlib import pyplot as plt
 import numpy as np
-# np.random.seed(42)
+np.random.seed(42)
 
 import tools
 
 def main():
+    test_weights = SingleLayerPerceptron._initiate_weights_matrix(257, 10)
     train_in, train_out = tools.load_training_set()
     test_in, test_out = tools.load_test_set()
-    learning_rates = [0.01]
+    learning_rates = [0.01, 0.03, 0.05, 0.07, 0.09]
     for lr in learning_rates:
-        slp = SingleLayerPerceptron(lr, train_in, train_out, test_in, test_out)
-        slp.train_network()
+        slp = SingleLayerPerceptron(
+            learning_rate=lr,
+            training_entries_inputs=train_in,
+            training_entries_outputs=train_out,
+            test_entries_inputs=test_in,
+            test_entries_outputs=test_out,
+            weights_matrix=deepcopy(test_weights),
+        )
+        slp.train_network(int(3e5))
         result = slp.classify(test_in)
         successes = (result == test_out)
         successful_classification_fraction = np.sum(successes) / len(test_out)
         print("Test Classification succes = {}%.".format(successful_classification_fraction * 100))
-        slp.plot_precision_sequence()
+        slp.plot_precision_sequence("images/lr={}_epochs={}.png".format(lr, int(3e5)))
 
 
 class SingleLayerPerceptron:
@@ -28,6 +37,7 @@ class SingleLayerPerceptron:
         training_entries_outputs: np.ndarray,
         test_entries_inputs: np.ndarray,
         test_entries_outputs: np.ndarray,
+        weights_matrix = None,
     ):
         assert len(training_entries_inputs) == len(training_entries_outputs)
         assert len(test_entries_inputs) == len(test_entries_outputs)
@@ -43,7 +53,12 @@ class SingleLayerPerceptron:
         self.test_desired_activation_matrix = SingleLayerPerceptron._convert_output_digits_to_desired_node_activation_matrix(test_entries_outputs, self.num_nodes)
         self.num_entries = len(self.training_input_matrix)
         self.num_inputs = len(self.training_input_matrix[1])
-        self.W = self._initiate_weights_matrix(self.num_inputs, self.num_nodes)
+        if weights_matrix is None:
+            self.W = self._initiate_weights_matrix(self.num_inputs, self.num_nodes)
+        else:
+            assert weights_matrix.shape == (self.num_inputs, self.num_nodes)
+            self.W = weights_matrix
+            print(self.W)
         self.training_current_activations = None
         self.test_current_activations = None
         self.training_precision = []
@@ -52,6 +67,8 @@ class SingleLayerPerceptron:
 
     def train_network(self, training_epochs=5000):
         print("Training Network")
+        print("Learning Rate: {}".format(self.learning_rate))
+        print("Training Epochs: {}".format(training_epochs))
         start = time.time()
         for epoch in range(training_epochs):
             self.training_current_activations, self.training_output = SingleLayerPerceptron.forward_pass(
@@ -170,7 +187,11 @@ class SingleLayerPerceptron:
 
     @staticmethod
     def _initiate_weights_matrix(num_inputs, num_nodes):
-        return np.random.rand(num_inputs, num_nodes)
+        return np.random.uniform(
+            low=-1,
+            high=1,
+            size=(num_inputs, num_nodes)
+        )
 
 
     @staticmethod
