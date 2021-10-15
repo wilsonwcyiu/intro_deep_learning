@@ -58,3 +58,11 @@ def apply_LLE(data: np.ndarray, output_dimension: int) -> np.ndarray:
 def apply_PCA(data: np.ndarray, output_dimension: int) -> np.ndarray:
     pca = PCA(n_components=output_dimension)
     return pca.fit_transform(data)
+
+
+def plot_digit(digit_vector: np.ndarray, filename=None) -> None:
+    fig, ax = plt.subplots()
+    im = ax.imshow(np.reshape(digit_vector, (16, 16)))
+    if filename is not None:
+        plt.savefig(filename)
+    plt.close()
