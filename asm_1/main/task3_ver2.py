@@ -42,22 +42,31 @@ if __name__ == '__main__':
     #     0]])
     #
 
+    # all_train_set: np.array = np.array([
+    #     [0,1,0],[0,0,1],[1,0,0],[1,1,0],[1,1,1]
+    # ]);                             #pprint.pprint(all_train_set);pprint.pprint(all_train_set.shape)
+    # all_y_label: np.array = np.array([[
+    #     1, 0, 0, 1, 1
+    # ]])
+    # all_y_label: np.array = all_y_label.reshape(5, 1)
+
+
+    fixed_bias_1 = 1
     all_train_set: np.array = np.array([
-        [0,1,0],[0,0,1],[1,0,0],[1,1,0],[1,1,1]
-    ]);                             #pprint.pprint(all_train_set);pprint.pprint(all_train_set.shape)
+        [fixed_bias_1,0,0],[fixed_bias_1,0,1],[fixed_bias_1,1,0],[fixed_bias_1,1,1]
+    ]);
     all_y_label: np.array = np.array([[
-        1, 0, 0, 1, 1
+        0, 1, 1, 0
     ]])
 
-
-    all_y_label: np.array = all_y_label.reshape(5, 1)
+    all_y_label: np.array = all_y_label.reshape(4, 1)
 
     np.random.seed(42)
     hidden_layer_W: np.array = np.random.rand(3, 2);                #print(type(hidden_layer_W), hidden_layer_W, hidden_layer_W.shape)
-    hidden_layer_bias: np.array = np.random.rand(1, 2);             #print(type(hidden_layer_bias), hidden_layer_bias, hidden_layer_bias.shape)
+    # hidden_layer_bias: np.array = np.random.rand(1, 2);             #print(type(hidden_layer_bias), hidden_layer_bias, hidden_layer_bias.shape)
 
     output_layer_W: np.array = np.random.rand(3, 1);                #print(type(output_layer_W), output_layer_W, output_layer_W.shape)
-    output_layer_bias: np.array = np.random.rand(1, 3);             #print(type(output_layer_bias), output_layer_bias, output_layer_bias.shape)
+    # output_layer_bias: np.array = np.random.rand(1, 3);             #print(type(output_layer_bias), output_layer_bias, output_layer_bias.shape)
 
 
     lr = 0.0005
@@ -83,7 +92,7 @@ if __name__ == '__main__':
         y_label = all_y_label;                       #print("y_label shape", y_label.shape)
 
         z1: np.array = np.dot(train_set, hidden_layer_W);           #print("z1 shape", z1.shape)
-        z1 += hidden_layer_bias
+        # z1 += hidden_layer_bias
         a1: np.array = sigmoid(z1)
 
         loc: int = 0
@@ -101,7 +110,12 @@ if __name__ == '__main__':
 
 
         # backpropagation step 1
-        error: np.array = yhat_activation - y_label;                         print("error.shape", error.shape, "error.sum()", error.sum())
+        error: np.array = yhat_activation - y_label;
+        mse = 0
+        for err in error:
+            mse += err**2
+
+        mse = mse / len(error);                                             print("mse", mse, "error.sum()", error.sum())
 
         dcost_dpred: np.array = error;                                          #print("dcost_dpred.shape", dcost_dpred.shape)
         dpred_dz: np.array = sigmoid_derivative(yhat_activation);               #print("dpred_dz.shape", dpred_dz.shape)
@@ -111,8 +125,8 @@ if __name__ == '__main__':
         # inputs = all_train_set;       #print("inputs.shape", inputs.shape)
         output_layer_W -= lr * np.dot(a1.T, z_delta);       #print("output_layer_W.shape", output_layer_W.shape)
 
-        for num in z_delta:
-            output_layer_W -= lr * num
+        # for num in z_delta:
+        #     output_layer_W -= lr * num
         #print("output_layer_W", output_layer_W, "output_layer_W.shape", output_layer_W.shape)
 
 
@@ -128,8 +142,8 @@ if __name__ == '__main__':
 
         hidden_layer_W -= lr * np.dot(train_set.T, hl_z_delta);       #print("hidden_layer_W.shape", hidden_layer_W.shape)
 
-        for num in hl_z_delta:
-            hidden_layer_bias -= lr * num
+        # for num in hl_z_delta:
+        #     hidden_layer_bias -= lr * num
 
 
 

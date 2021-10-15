@@ -28,7 +28,15 @@ def sigmoid_derivative(activation: np.array):
 
 
 
+def mse(weights_1: list, weight2: list):
+    n = len(weights_1)
+    sum: float = 0
+    for idx in range(0, n):
+        sum += (weights_1[idx] - weight2[idx])**2
 
+    mse: float = sum/n
+
+    return mse
 
 
 
@@ -56,7 +64,7 @@ if __name__ == '__main__':
     output_layer_bias: np.array = np.random.rand(1, 3);             #print(type(output_layer_bias), output_layer_bias, output_layer_bias.shape)
 
 
-    lr = 0.0005
+    lr = 0.01
 
     for epoch in range(200000):
 
@@ -78,8 +86,8 @@ if __name__ == '__main__':
 
         # calculate lost and cost
         lost_data_array: np.array = layer_2_activation_yhat - all_y_label;
-        cost: float = lost_data_array.sum();                                            print("Cost: ", cost)
-
+        cost: float = lost_data_array.sum();
+        mse_value = mse(layer_2_activation_yhat, all_y_label);                           print("Cost: ", cost, "mse", mse_value)
 
         # backpropagation from output Y to output layer
         output_layer_dcost_dpred: np.array = lost_data_array;                                          #print("dcost_dpred.shape", dcost_dpred.shape)

@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
         loss_list: float = []
         for loss_idx in range(0, len(yhat_list)):
-            loss: float = yhat_list[loss_idx] - all_y_label_list[loss_idx];
+            loss: float = plot_multi_list[loss_idx] - all_y_label_list[loss_idx];
             loss_list.append(loss)
 
         cost = np.sum(loss_list)/ len(loss_list);               print(cost)

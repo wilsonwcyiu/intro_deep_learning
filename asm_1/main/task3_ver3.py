@@ -69,8 +69,12 @@ if __name__ == '__main__':
 
 
         # calculate cost
-        error: np.array = a2_yhat_activation - all_y_label;                         print("error.sum()", error.sum())
+        error: np.array = a2_yhat_activation - all_y_label;                         #print("error.sum()", error.sum())
+        mse = 0
+        for err in error:
+            mse += err**2
 
+        mse = mse / len(error);                                             print("mse", mse, "error.sum()", error.sum())
 
 
         # backpropagation from output Y to output layer
