@@ -38,12 +38,14 @@ def mse(weights_1: list, weight2: list):
 
 
 
-def grdmse(cost: float, yhat_list: float, activation_record_list: list):
-    dcost_dpred: float = cost
+def grdmse(loss_list: list, yhat_list: float, activation_record_list: list):
+    # dcost_dpred: float = cost
 
     weight_vector_grd: list = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     for idx in range(0, len(yhat_list)):
+        dcost_dpred = loss_list[idx]
+
         # output layer to hidden layer grd
         weight_vector_grd[6] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
         weight_vector_grd[7] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
@@ -51,14 +53,41 @@ def grdmse(cost: float, yhat_list: float, activation_record_list: list):
 
         # hidden layer to input layer grd
         activation_record = activation_record_list[idx]
-        weight_vector_grd[0] += dcost_dpred * sigmoid_derivative(activation_record[7])
-        weight_vector_grd[1] += dcost_dpred * sigmoid_derivative(activation_record[8])
-        weight_vector_grd[2] += dcost_dpred * sigmoid_derivative(activation_record[7])
-        weight_vector_grd[3] += dcost_dpred * sigmoid_derivative(activation_record[8])
-        weight_vector_grd[4] += dcost_dpred * sigmoid_derivative(activation_record[7])
-        weight_vector_grd[5] += dcost_dpred * sigmoid_derivative(activation_record[8])
+        weight_vector_grd[0] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[1] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
+
+        weight_vector_grd[2] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[3] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
+
+        weight_vector_grd[4] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+        weight_vector_grd[5] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
 
     return weight_vector_grd
+
+#
+# def grdmse(cost: float, yhat_list: float, activation_record_list: list):
+#     dcost_dpred: float = cost
+#
+#     weight_vector_grd: list = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+#
+#     for idx in range(0, len(yhat_list)):
+#         # output layer to hidden layer grd
+#         weight_vector_grd[6] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
+#         weight_vector_grd[7] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
+#         weight_vector_grd[8] += dcost_dpred * sigmoid_derivative(yhat_list[idx])
+#
+#         # hidden layer to input layer grd
+#         activation_record = activation_record_list[idx]
+#         weight_vector_grd[0] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+#         weight_vector_grd[1] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
+#
+#         weight_vector_grd[2] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+#         weight_vector_grd[3] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
+#
+#         weight_vector_grd[4] += weight_vector_grd[7] * sigmoid_derivative(activation_record[7])
+#         weight_vector_grd[5] += weight_vector_grd[8] * sigmoid_derivative(activation_record[8])
+#
+#     return weight_vector_grd
 
 
 
@@ -118,7 +147,7 @@ if __name__ == '__main__':
         cost = np.sum(loss_list)/ len(loss_list);               #print(cost)
         mse_value = mse(yhat_list, all_y_label_list)
 
-        gradient_desc_vector = grdmse(cost, yhat_list, activation_record_list)
+        gradient_desc_vector = grdmse(loss_list, yhat_list, activation_record_list)
 
         for activation_record in activation_record_list:
             weight_vector[0] -= lr * activation_record[0] * gradient_desc_vector[0]
