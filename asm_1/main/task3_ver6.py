@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 # from testCases_v4a import *
 # from dnn_utils_v2 import sigmoid, sigmoid_backward, relu, relu_backward
-
+from matplotlib import pyplot
 
 # Implement the function xor net(x1; x2;weights) that simulates a network with
 # two inputs, two hidden nodes and one output node.
@@ -62,21 +62,40 @@ def xor_net(x1_list, x2_list, weight_vector: list):
         neural_2_activation: float = sigmoid(neural_2_z)
 
         output_neural_3_z: float = fixed_bias_1 * weight_vector[6] + neural_1_activation * weight_vector[7] + neural_2_activation * weight_vector[8]
-        output_activation: float = sigmoid(output_neural_3_z)
+        output_activation: float = float(sigmoid(output_neural_3_z))
 
         yhat_list.append(output_activation)
 
     return yhat_list
 
 
+def plot_multi_list(plot_id: int, plot_title: str, x_label: str, y_label: str, label_data_list_dict: dict):
+    pyplot.figure(plot_id)
+    pyplot.clf()
 
+    pyplot.title(plot_title)
+    pyplot.xlabel(x_label)
+    pyplot.ylabel(y_label)
+
+    for key, item in label_data_list_dict.items():
+        pyplot.plot(item, label=key)
+
+    pyplot.legend()
+
+    # pyplot.pause(0.001)
+
+    return pyplot
 
 
 if __name__ == '__main__':
-
+    # yhat_record_list: list = []
+    # y_record_list: list = []
+    misclassification_count: int = 0
+    misclassification_count_list: int = []
+    cost_record_list: list = []
 
     x1: int = [0, 0, 1, 1]
-    x2: int = [0, 1, 1, 0]
+    x2: int = [0, 1, 0, 1]
     all_y_label_list: list = [0, 1, 1, 0]
 
     fixed_bias_1: int = 1
@@ -92,7 +111,7 @@ if __name__ == '__main__':
         loss_list: float = []
         for loss_idx in range(0, len(yhat_list)):
             loss: float = yhat_list[loss_idx] - all_y_label_list[loss_idx];
-            loss_list.append(loss**2)
+            loss_list.append(loss)
 
         cost = np.sum(loss_list)/ len(loss_list);               print(cost)
 
@@ -110,3 +129,22 @@ if __name__ == '__main__':
 
 
 
+
+
+        # yhat_list = list(map(lambda x: 1 if x > 0.5 else 0, yhat_list))
+        # for idx in range(0, len(yhat_list)):
+        #     if yhat_list[idx] != all_y_label_list[idx]:
+        #         misclassification_count += 1
+        #
+        # misclassification_count_list.append(misclassification_count)
+        # cost_record_list.append(cost)
+        #
+        # # plot_id = 1
+        # # plot_title = "title"
+        # # x_label = "Iterations"
+        # # y_label = "Cost and misclassification count"
+        # # label_data_list_dict: dict = {"Cost": cost_record_list, "Misclassification": misclassification_count_list}
+        # if epoch % 1000 == 0:
+        #     print(str(epoch*4) + "," + str(cost) + "," + str(misclassification_count))
+        #     # plt = plot_multi_list(plot_id, plot_title, x_label, y_label, label_data_list_dict)
+        #     # plt.show()

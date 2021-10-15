@@ -91,15 +91,18 @@ def xor_net(x1_list, x2_list, weight_vector: list):
 
 
 if __name__ == '__main__':
+    misclassification_count: int = 0
+    misclassification_count_list: int = []
+    cost_record_list: list = []
 
 
     x1: int = [0, 0, 1, 1]
-    x2: int = [0, 1, 1, 0]
+    x2: int = [0, 1, 0, 1]
     all_y_label_list: list = [0, 1, 1, 0]
 
     fixed_bias_1: int = 1
 
-    np.random.seed(42)
+    # np.random.seed(42)
     weight_vector: list = np.random.rand(9, 1)
 
     lr = 0.001
@@ -112,20 +115,40 @@ if __name__ == '__main__':
             loss: float = yhat_list[loss_idx] - all_y_label_list[loss_idx];
             loss_list.append(loss)
 
-        cost = np.sum(loss_list)/ len(loss_list);               print(cost)
+        cost = np.sum(loss_list)/ len(loss_list);               #print(cost)
+        mse_value = mse(yhat_list, all_y_label_list)
 
-        gradient_vector = grdmse(cost, yhat_list, activation_record_list)
+        gradient_desc_vector = grdmse(cost, yhat_list, activation_record_list)
 
         for activation_record in activation_record_list:
-            weight_vector[0] -= lr * activation_record[0] * gradient_vector[0]
-            weight_vector[1] -= lr * activation_record[1] * gradient_vector[1]
-            weight_vector[2] -= lr * activation_record[2] * gradient_vector[2]
-            weight_vector[3] -= lr * activation_record[3] * gradient_vector[3]
-            weight_vector[4] -= lr * activation_record[4] * gradient_vector[4]
-            weight_vector[5] -= lr * activation_record[5] * gradient_vector[5]
-            weight_vector[6] -= lr * activation_record[6] * gradient_vector[6]
-            weight_vector[7] -= lr * activation_record[7] * gradient_vector[7]
-            weight_vector[8] -= lr * activation_record[8] * gradient_vector[8]
+            weight_vector[0] -= lr * activation_record[0] * gradient_desc_vector[0]
+            weight_vector[1] -= lr * activation_record[1] * gradient_desc_vector[1]
+            weight_vector[2] -= lr * activation_record[2] * gradient_desc_vector[2]
+            weight_vector[3] -= lr * activation_record[3] * gradient_desc_vector[3]
+            weight_vector[4] -= lr * activation_record[4] * gradient_desc_vector[4]
+            weight_vector[5] -= lr * activation_record[5] * gradient_desc_vector[5]
+            weight_vector[6] -= lr * activation_record[6] * gradient_desc_vector[6]
+            weight_vector[7] -= lr * activation_record[7] * gradient_desc_vector[7]
+            weight_vector[8] -= lr * activation_record[8] * gradient_desc_vector[8]
 
 
 
+
+
+        yhat_list = list(map(lambda x: 1 if x > 0.5 else 0, yhat_list))
+        for idx in range(0, len(yhat_list)):
+            if yhat_list[idx] != all_y_label_list[idx]:
+                misclassification_count += 1
+
+        # misclassification_count_list.append(misclassification_count)
+        # cost_record_list.append(cost)
+
+        # plot_id = 1
+        # plot_title = "title"
+        # x_label = "Iterations"
+        # y_label = "Cost and misclassification count"
+        # label_data_list_dict: dict = {"Cost": cost_record_list, "Misclassification": misclassification_count_list}
+        if epoch % 1000 == 0:
+            print(str(epoch*4) + "," + str(cost) + "," + str(mse_value) + "," + str(misclassification_count))
+            # plt = plot_multi_list(plot_id, plot_title, x_label, y_label, label_data_list_dict)
+            # plt.show()
