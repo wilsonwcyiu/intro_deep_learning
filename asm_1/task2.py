@@ -1,3 +1,4 @@
+import sys
 from copy import deepcopy
 import time
 from matplotlib import pyplot as plt
@@ -10,7 +11,7 @@ def main():
     test_weights = SingleLayerPerceptron._initiate_weights_matrix(257, 10)
     train_in, train_out = tools.load_training_set()
     test_in, test_out = tools.load_test_set()
-    learning_rates = [0.01, 0.03, 0.05, 0.07, 0.09]
+    learning_rates = [0.001]
     for lr in learning_rates:
         slp = SingleLayerPerceptron(
             learning_rate=lr,
@@ -20,12 +21,13 @@ def main():
             test_entries_outputs=test_out,
             weights_matrix=deepcopy(test_weights),
         )
-        slp.train_network(int(3e5))
+        slp.train_network_for(int(5e4))
+        # slp.train_network_until_convergence()
         result = slp.classify(test_in)
         successes = (result == test_out)
         successful_classification_fraction = np.sum(successes) / len(test_out)
         print("Test Classification succes = {}%.".format(successful_classification_fraction * 100))
-        slp.plot_precision_sequence("images/lr={}_epochs={}.png".format(lr, int(3e5)))
+        slp.plot_precision_sequence("images/lr={}_epochs={}.png".format(lr, int(5e4)))
 
 
 class SingleLayerPerceptron:
@@ -58,14 +60,13 @@ class SingleLayerPerceptron:
         else:
             assert weights_matrix.shape == (self.num_inputs, self.num_nodes)
             self.W = weights_matrix
-            print(self.W)
         self.training_current_activations = None
         self.test_current_activations = None
         self.training_precision = []
         self.test_precision = []
 
 
-    def train_network(self, training_epochs=5000):
+    def train_network_for(self, training_epochs=5000):
         print("Training Network")
         print("Learning Rate: {}".format(self.learning_rate))
         print("Training Epochs: {}".format(training_epochs))
@@ -84,9 +85,39 @@ class SingleLayerPerceptron:
             self.W += W_updates
             self.training_precision.append(self.calculate_precision_on_training_set())
             self.test_precision.append(self.calculate_precision_on_test_set())
+            if epoch%1000 == 0:
+                print("Epoch: {:.2e}, Current Precision: {:.1f}%".format(epoch, self.test_precision[-1]), end='\r')
         stop = time.time()
         print("Time elapsed: {:.1f}s".format(stop-start))
 
+
+    def train_network_until_convergence(self, maximum_epochs=int(5e3)):
+        print("Training Network")
+        print("Learning Rate: {}".format(self.learning_rate))
+        start = time.time()
+        trained_epochs = 0
+        converged = False
+        while not converged and trained_epochs < maximum_epochs:
+            self.training_current_activations, self.training_output = SingleLayerPerceptron.forward_pass(
+                X = self.training_input_matrix,
+                W = self.W,
+            )
+            current_epoch_training_error_matrix, W_updates = SingleLayerPerceptron.backward_pass(
+                learning_rate = self.learning_rate,
+                X = self.training_input_matrix,
+                A = self.training_current_activations,
+                D = self.training_desired_activation_matrix,
+            )
+            self.W += W_updates
+            self.training_precision.append(self.calculate_precision_on_training_set())
+            self.test_precision.append(self.calculate_precision_on_test_set())
+            converged = SingleLayerPerceptron.test_convergence(self.test_precision, 10)
+            trained_epochs += 1
+            if trained_epochs%1000 == 0:
+                print("Epoch: {:.2e}, Current Precision: {:.1f}%".format(trained_epochs, self.test_precision[-1]), end='\r')
+        stop = time.time()
+        print("\nTime elapsed: {:.1f}s".format(stop-start))
+        # import pdb; pdb.set_trace()
 
     def classify(self, input_matrix):
         input_matrix_with_bias = SingleLayerPerceptron._append_bias_to_input_matrix(input_matrix)
@@ -130,7 +161,7 @@ class SingleLayerPerceptron:
     def test_convergence(precision_sequence, final_num_epochs):
         final_epochs = precision_sequence[-final_num_epochs:]
         if len(precision_sequence) > final_num_epochs:
-            decreasing = all(i < j for i, j in zip(final_epochs, final_epochs[1:]))
+            decreasing = all(i > j for i, j in zip(final_epochs, final_epochs[1:]))
             # similar = (np.std(precision_sequence[-final_num_epochs:]) < np.mean(precision_sequence[-final_num_epochs:]))
             if decreasing:
                 return True
