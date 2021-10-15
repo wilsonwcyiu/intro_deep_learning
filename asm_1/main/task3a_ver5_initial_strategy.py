@@ -119,19 +119,11 @@ if __name__ == '__main__':
     fixed_bias_1: int = 1
 
     # np.random.seed(42)
-    # Small random values in the range [-0.3, 0.3]
-    # Small random values in the range [0, 1]
-    # Small random values in the range [-1, 1]
-
     range_dict: dict = {"range [-0.3, 0.3]": (-0.3, 0.3),
                           "range [-0, 1]": (-0, 1),
-                          "range [-1, 1]": (-1, 1)
+                           "range [-1, 1]": (-1, 1),
+                           "range [0, 0]": (0, 0)
                           }
-    # low: float = -0.3
-    # high: float = 0.3
-    #
-    # weight_vector: list = np.random.rand(1, 9) * (high-low) + low
-    # weight_vector = weight_vector[0]
 
     plot_data_dict: dict = {}
 

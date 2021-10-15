@@ -120,6 +120,7 @@ if __name__ == '__main__':
 
     learning_rate_dict: dict = {"learning rate 0.001": 0.001,
                                 "learning rate 0.005": 0.005,
+                                "learning rate 0.0005": 0.0005,
                                 "learning rate 0.0001": 0.0001
                                         }
 
