@@ -18,21 +18,13 @@ import matplotlib.pyplot as plt
 # Assume that all non-input nodes use the sigmoid activation function.
 
 
-# def sigmoid(x):
-#     return (1.0 / (1.0 + np.exp(-x)))
-#
-# def sigmoid_deriv(x):
-#     return (x*(1-x))
 
 def sigmoid(z: np.array):
     return (1/(1 + np.exp(-z)))
 
 
-# def sigmoid_derivative(activation: np.array):
-#     return sigmoid(activation) * (1 - sigmoid(activation))
-
 def sigmoid_derivative(activation: np.array):
-    return (activation * (1 - activation))
+    return sigmoid(activation) * (1 - sigmoid(activation))
 
 
 
@@ -56,14 +48,12 @@ if __name__ == '__main__':
     fixed_bias_1: int = 1
 
     all_train_set: np.array = np.array([
-        [fixed_bias_1,0,0],[fixed_bias_1,0,1],[fixed_bias_1,1,0],[fixed_bias_1,1,1],
         [fixed_bias_1,0,0],[fixed_bias_1,0,1],[fixed_bias_1,1,0],[fixed_bias_1,1,1]
     ]);
     all_y_label: np.array = np.array([[
-        0, 1, 1, 0,
         0, 1, 1, 0
     ]])
-    all_y_label: np.array = all_y_label.reshape(8, 1)
+    all_y_label: np.array = all_y_label.reshape(4, 1)
 
 
     # initial weights
@@ -73,20 +63,13 @@ if __name__ == '__main__':
     high: float = 1
     hidden_layer_weight = np.random.rand(3, 2) * (high-low) + low
     output_layer_weight = np.random.rand(3, 1) * (high-low) + low
-    # hidden_layer_weight: np.array = np.random.rand(3, 2);                #print(type(hidden_layer_W), hidden_layer_W, hidden_layer_W.shape)
-    # output_layer_weight: np.array = np.random.normal(3, 1);                #print(type(output_layer_W), output_layer_W, output_layer_W.shape)
 
-
-    # hidden_layer_bias = np.random.rand(1, 2) * (high-low) + low
-    # output_layer_bias = np.random.rand(1, 1) * (high-low) + low;             #print(type(output_layer_bias), output_layer_bias, output_layer_bias.shape)
-
-    lr = 0.01
+    lr = 0.1
 
     for epoch in range(200000):
 
-        # feedforward fromm input layer to hidden layer
+        # feedforward from input layer to hidden layer
         layer_1_z: np.array = np.dot(all_train_set, hidden_layer_weight);           #print("z1 shape", z1.shape)
-        # layer_1_z += hidden_layer_bias
         layer_1_activation: np.array = sigmoid(layer_1_z)
 
 
@@ -96,7 +79,6 @@ if __name__ == '__main__':
         layer_1_activation = np.insert(layer_1_activation, loc, fixed_bias_1, axis=1);              #print(">>a1", a1)
 
         layer_2_z: np.array = np.dot(layer_1_activation, output_layer_weight);           #print("z2", z2)
-        # layer_2_z += output_layer_bias
         layer_2_activation_yhat: np.array = sigmoid(layer_2_z);                        #print("a2_yhat_activation", a2)
 
 
@@ -113,7 +95,6 @@ if __name__ == '__main__':
 
 
         # backpropagation from output layer to hidden layer
-        # hidden_layer_lost: np.array = layer_1_activation - output_layer_weight.T;       #print("hl_error.shape", hl_error.shape)
         hidden_layer_lost: np.array = np.dot(output_layer_activation_delta, output_layer_weight.T);       #print("hl_error.shape", hl_error.shape)
         hidden_layer_dcost_dpred: np.array = hidden_layer_lost;
         hidden_layer_dpred_dz: np.array = sigmoid_derivative(layer_1_activation);     #print("hl_dpred_dz.shape", hl_dpred_dz.shape)
@@ -127,18 +108,6 @@ if __name__ == '__main__':
 
         output_layer_weight -= lr * np.dot(layer_1_activation.T, output_layer_activation_delta);       #print("output_layer_W.shape", output_layer_W.shape)
         hidden_layer_weight -= lr * np.dot(all_train_set.T, hidden_layer_activation_delta);       #print("hidden_layer_W.shape", hidden_layer_W.shape)
-
-
-        # for activation_delta in output_layer_activation_delta:
-        #     output_layer_bias -= lr * activation_delta
-        #
-        # for activation_delta in hidden_layer_activation_delta:
-        #     hidden_layer_bias -= lr * activation_delta
-
-    # if epoch > 2000:
-        #     print("output_layer_activation_delta ", output_layer_activation_delta.reshape(1,4))
-            # print("hidden_layer_activation_delta ", hidden_layer_activation_delta.reshape(1,8))
-            # print("hidden_layer_weight ", hidden_layer_weight.reshape(1,6))
 
 
 
