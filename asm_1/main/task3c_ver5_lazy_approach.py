@@ -118,19 +118,19 @@ if __name__ == '__main__':
 
     fixed_bias_1: int = 1
 
-    weight_low = -1; weight_high = 1
-    rand_w_1 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
+    # weight_low = -1; weight_high = 1
+    # rand_w_1 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
+    #
+    # weight_low = -5; weight_high = 5
+    # rand_w_2 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
+    #
+    # weight_low = -0.1; weight_high = 1
+    # rand_w_3 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
 
-    weight_low = -5; weight_high = 5
-    rand_w_2 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
 
-    weight_low = -0.1; weight_high = 1
-    rand_w_3 = np.random.rand(1, 9) * (weight_high - weight_low) + weight_low
-
-
-    learning_rate_dict: dict = {"Random weight 1": rand_w_1[0],
-                                "Random weight 2": rand_w_2[0],
-                                "Random weight 3": rand_w_3[0]
+    learning_rate_dict: dict = {"Random weight sample 1": None,
+                                "Random weight sample 2": None,
+                                "Random weight sample 3": None
                                 }
 
 
@@ -140,10 +140,11 @@ if __name__ == '__main__':
     lr = 0.001
 
     for name, random_weight in learning_rate_dict.items():
-        weight_vector = random_weight
+        # weight_vector = random_weight
 
         data_list: list = []
         for epoch in range(2000):
+            weight_vector = np.random.rand(1, 9)[0]
             yhat_list, activation_record_list = xor_net(x1, x2, weight_vector)
 
             loss_list: float = []
@@ -187,14 +188,14 @@ if __name__ == '__main__':
                 # plt = plot_multi_list(plot_id, plot_title, x_label, y_label, label_data_list_dict)
                 # plt.show()
 
-            data_list.append(cost)
+            data_list.append(mse_value)
 
         plot_data_dict[name] = data_list
 
     plot_id = 1
-    plot_title = "Cost performance over random weight"
+    plot_title = "MSE over random weight"
     x_label = "Iterations"
-    y_label = "Cost"
+    y_label = "MSE"
     plt = plot_multi_list(plot_id, plot_title, x_label, y_label, plot_data_dict)
 
     plt.show()

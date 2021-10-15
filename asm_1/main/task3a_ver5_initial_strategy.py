@@ -187,14 +187,14 @@ if __name__ == '__main__':
                 # plt = plot_multi_list(plot_id, plot_title, x_label, y_label, label_data_list_dict)
                 # plt.show()
 
-            data_list.append(cost)
+            data_list.append(mse_value)
 
         plot_data_dict[name] = data_list
 
     plot_id = 1
-    plot_title = "Cost performance over different weight initialization strategy"
+    plot_title = "MSE over different weight initialization strategy"
     x_label = "Iterations"
-    y_label = "Cost"
+    y_label = "MSE"
     plt = plot_multi_list(plot_id, plot_title, x_label, y_label, plot_data_dict)
 
     plt.show()
