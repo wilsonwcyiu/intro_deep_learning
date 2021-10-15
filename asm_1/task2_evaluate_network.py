@@ -18,11 +18,9 @@ def main():
     test_in, test_out = tools.load_test_set()
 
 
-    learning_rates = np.logspace(-5, 2, 8)
-    # seeds = range(20)
-    # num_training_epochs = 5e3
-    seeds = [0, 1]
-    num_training_epochs = 100
+    learning_rates = [0.001]
+    seeds = np.arange(100, 150)
+    num_training_epochs = int(5e3)
 
 
     for lr in learning_rates:
@@ -40,10 +38,10 @@ def main():
             # Save diagnostics
             lr_seed_coordinate.append((lr, seed))
             final_test_precision.append(slp.test_precision[-1])
-            train_precision_sequence.append(slp.test_precision)
-            test_precision_sequence.append(slp.training_precision)
+            test_precision_sequence.append(slp.test_precision)
+            train_precision_sequence.append(slp.training_precision)
             final_weights_matrix.append(slp.W)
-    with open("diagnostics.pkl", 'wb') as f:
+    with open("randomseed_diagnostics.pkl", 'wb') as f:
         pickle.dump(
             obj=[
                 lr_seed_coordinate, 
