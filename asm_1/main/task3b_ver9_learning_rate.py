@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 if yhat_binary != all_y_label[idx]:
                     misclassification_count += 1
 
-            misclassification_count_list.append(misclassification_count)
+                misclassification_count_list.append(misclassification_count)
 
 
             # backpropagation from output Y to output layer
