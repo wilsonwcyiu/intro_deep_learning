@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     batch_size = 128
     num_classes = 10
-    epochs = 2
+    epochs = 20
 
     # the data, split between train and test sets
     # (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -65,8 +65,7 @@ if __name__ == '__main__':
 
     history = model.fit(X_train, y_train, epochs=2, validation_data=(X_valid, y_valid))
 
-    print(type(history))
-    print(type(history.history))
+
     # pd.DataFrame(history.history).plot(figsize=(8, 5))
     # plt.grid(True)
     # plt.gca().set_ylim(0, 1) # set the vertical range to [0-1]
