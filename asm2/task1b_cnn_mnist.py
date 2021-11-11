@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
 
     execute_dict_id_list = []
-    for idx in range(384):
+    for idx in range(1, 384):
         execute_dict_id_list.append(idx)
 
     now = datetime.now() # current date and time
