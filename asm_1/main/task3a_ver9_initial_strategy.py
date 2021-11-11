@@ -68,7 +68,7 @@ if __name__ == '__main__':
     # np.random.seed(42)
     range_dict: dict = {
                         "range [-0.3, 0.3]": (-0.3, 0.3),
-                        "range [-0, 1]": (0, 1),
+                        "range [0, 1]": (0, 1),
                         "range [-1, 1]": (-1, 1),
                         "range [0, 0]": (0, 0)
                         }

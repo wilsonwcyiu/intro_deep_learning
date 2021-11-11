@@ -98,7 +98,7 @@ if __name__ == '__main__':
         misclassification_count_list: int = []
 
         data_list: list = []
-        for epoch in range(50000):
+        for epoch in range(100000):
 
             # feedforward from input layer to hidden layer
             layer_1_z: np.array = np.dot(all_train_set, hidden_layer_weight);           #print("z1 shape", z1.shape)

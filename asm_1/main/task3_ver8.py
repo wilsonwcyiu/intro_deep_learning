@@ -105,10 +105,10 @@ def grdmse(cost: float, yhat: float, neural_1_activation, neural_2_activation):
 def xor_net(x1, x2, weight_vector: list):
 
     # feedforward
-    neural_1_z: float = fixed_bias_1 * weight_vector[0] + x1 * weight_vector[1] + x2 * weight_vector[2]
+    neural_1_z: float = fixed_bias_1 * weight_vector[0] + x1 * weight_vector[2] + x2 * weight_vector[4]
     neural_1_activation: float = sigmoid(neural_1_z)
 
-    neural_2_z: float = fixed_bias_1 * weight_vector[3] + x1 * weight_vector[4] + x2 * weight_vector[5]
+    neural_2_z: float = fixed_bias_1 * weight_vector[1] + x1 * weight_vector[3] + x2 * weight_vector[5]
     neural_2_activation: float = sigmoid(neural_2_z)
 
     output_neural_3_z: float = fixed_bias_1 * weight_vector[6] + neural_1_activation * weight_vector[7] + neural_2_activation * weight_vector[8]
