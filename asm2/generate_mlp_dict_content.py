@@ -73,15 +73,15 @@ if __name__ == '__main__':
         if "(" not in optimizer: optimizer = "\"" + optimizer + "\""
 
 
-        template: str = f"{dict_idx}: HyperPara(epoch={epoch}," \
-                                                f"initializer={initializer}, " \
-                                                f"layer_tuple={layer_tuple}, " \
-                                                f"activation={activation}, " \
-                                                f"regularization_L1={regularization_L1}, " \
-                                                f"regularization_L2={regularization_L2}, " \
-                                                f"drop_out_rate={drop_out_rate}, " \
-                                                f"loss_func={loss_func}, " \
-                                                f"optimizers={optimizer}), "
+        template: str = f"{dict_idx}: HyperParaMlp(epoch={epoch}," \
+                                                    f"initializer={initializer}, " \
+                                                    f"layer_tuple={layer_tuple}, " \
+                                                    f"activation={activation}, " \
+                                                    f"regularization_L1={regularization_L1}, " \
+                                                    f"regularization_L2={regularization_L2}, " \
+                                                    f"drop_out_rate={drop_out_rate}, " \
+                                                    f"loss_func={loss_func}, " \
+                                                    f"optimizers={optimizer}), "
 
         dict_idx += 1
 

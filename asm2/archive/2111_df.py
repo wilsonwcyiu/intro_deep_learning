@@ -1,7 +1,4 @@
-import pandas as pd
+from asm2.hyper_para_cnn_dict import hyper_para_cnn_dict
 
-df = pd.DataFrame({'num_legs': [2, 4, 8, 0],
-                   'num_wings': [2, 0, 0, 0],
-                   'num_specimen_seen': [10, 2, 1, 8]})
-
-print(df)
+hyper_para = hyper_para_cnn_dict[1]
+print(hyper_para)

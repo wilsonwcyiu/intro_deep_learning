@@ -139,7 +139,7 @@ if __name__ == '__main__':
         kernel_regularizer = keras.regularizers.l1_l2(l1=hyper_para.regularization_L1, l2=hyper_para.regularization_L2)
         activation = hyper_para.activation
         dropout = hyper_para.drop_out_rate
-        layer_tuple = hyper_para.layer_tuple
+        layer_tuple = hyper_para.network_structure_id
 
         model = Sequential()
         num_of_neuron = layer_tuple[0]
