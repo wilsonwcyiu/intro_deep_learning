@@ -21,8 +21,8 @@ import tensorflow.keras.optimizers
 import pandas as pd
 
 
-from asm2.hyper_para import HyperPara
-from asm2.hyper_para_dict import hyper_para_dict
+from asm2.hyper_para_mlp import HyperPara
+from asm2.hyper_para_mlp_dict import hyper_para_dict
 
 
 if __name__ == '__main__':

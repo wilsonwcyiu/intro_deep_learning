@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 import sklearn.linear_model
 
-from asm2.hyper_para_dict import hyper_para_dict
+from asm2.hyper_para_mlp_dict import hyper_para_dict
 
 if __name__ == '__main__':
 
