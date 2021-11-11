@@ -1,4 +1,4 @@
-class HyperPara:
+class HyperParaMlp:
 
     def __init__(self,
                  epoch =             None,

@@ -6,6 +6,8 @@ Gets to 99.25% test accuracy after 12 epochs
 
 from __future__ import print_function
 
+from datetime import datetime
+
 from tensorflow import keras
 
 from tensorflow.keras import optimizers
@@ -49,6 +51,49 @@ if __name__ == '__main__':
     # convert class vectors to binary class matrices
     y_train = keras.utils.to_categorical(y_train, num_classes)
     y_test = keras.utils.to_categorical(y_test, num_classes)
+
+
+
+    execute_dict_id_list = []
+    for idx in range(10000, 10576):
+        execute_dict_id_list.append(idx)
+
+    now = datetime.now() # current date and time
+    date_time_str: str = now.strftime("%Y%m%d-%H%M%S")
+    folder_dir = f"G:/我的雲端硬碟/leiden_university_course_materials/bioinformatics_sem2/introduction_to_deep_learning/asm2/result/"
+    result_output_file = folder_dir + date_time_str + "_result_mlp_mnist_output.csv"
+    result_backup_output_file = folder_dir + date_time_str + "_result_mlp_mnist_output_backup.csv"
+    export_output_interval: int = 20
+
+
+    dict_id_list: list = []
+    initializer_list: list = []
+    regularization_L1_list: list = []
+    regularization_L2_list: list = []
+    activation_list: list = []
+    dropout_list: list = []
+    layer_tuple_list: list = []
+    loss_list: list = []
+    optimizer_list: list = []
+    epochs_list: list = []
+    train_loss_list: list = []
+    train_accuracy_list: list = []
+    train_mse_list: list = []
+    train_precision_list: list = []
+    train_recall_list: list = []
+    validation_loss_list: list = []
+    validation_accuracy_list: list = []
+    validation_mse_list: list = []
+    validation_precision_list: list = []
+    validation_recall_list: list = []
+    test_loss_list: list = []
+    test_accuracy_list: list = []
+    test_mse_list: list = []
+    test_precision_list: list = []
+    test_recall_list: list = []
+
+
+
 
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))

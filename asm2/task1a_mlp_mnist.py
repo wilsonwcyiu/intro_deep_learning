@@ -21,8 +21,8 @@ import tensorflow.keras.optimizers
 import pandas as pd
 
 
-from asm2.hyper_para_mlp import HyperPara
-from asm2.hyper_para_mlp_dict import hyper_para_dict
+from asm2.hyper_para_mlp import HyperParaMlp
+from asm2.hyper_para_mlp_dict import hyper_para_mlp_dict
 
 
 if __name__ == '__main__':
@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
     for dict_id in execute_dict_id_list:
         print("\rdict_id: ", dict_id)
-        hyper_para = hyper_para_dict[dict_id]
+        hyper_para = hyper_para_mlp_dict[dict_id]
 
         initializer = hyper_para.initializer
         kernel_regularizer = keras.regularizers.l1_l2(l1=hyper_para.regularization_L1, l2=hyper_para.regularization_L2)
