@@ -1,6 +1,4 @@
-import tensorflow
-
-from asm2.hyper_para_mlp import HyperParaMlp
+from hyper_para_mlp import HyperParaMlp
 from tensorflow.keras import optimizers
 import tensorflow.keras.optimizers
 

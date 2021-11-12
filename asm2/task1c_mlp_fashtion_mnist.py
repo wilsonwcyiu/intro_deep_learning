@@ -10,15 +10,9 @@ from datetime import datetime
 
 import tensorflow
 from tensorflow import keras
-from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import RMSprop
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import sklearn.linear_model
 
 from asm2.hyper_para_mlp_dict import hyper_para_mlp_dict
 

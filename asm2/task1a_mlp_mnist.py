@@ -8,20 +8,15 @@ Gets to 98.40% test accuracy after 20 epochs
 # from __future__ import print_function
 from datetime import datetime
 
-import tensorflow
 from tensorflow import keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import RMSprop
-import itertools
-import numpy as np
 import tensorflow.keras.optimizers
 import pandas as pd
 
-
-from asm2.hyper_para_mlp import HyperParaMlp
 from asm2.hyper_para_mlp_dict import hyper_para_mlp_dict
 
 

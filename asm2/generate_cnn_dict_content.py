@@ -17,7 +17,7 @@ import pandas as pd
 if __name__ == '__main__':
 
     dict_idx: int = 20000
-    epoch_list = [10]
+    epoch_list = [2]
     initializer_list = []
     # initializer_list.append("random_normal")
     initializer_list.append("uniform")

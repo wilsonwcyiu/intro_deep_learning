@@ -10,13 +10,12 @@ import tensorflow
 from datetime import datetime
 
 from tensorflow import keras
-from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.keras import backend as K
 
-from asm2.hyper_para_cnn_dict import hyper_para_cnn_dict
+from hyper_para_cnn_dict import hyper_para_cnn_dict
 import pandas as pd
 
 if __name__ == '__main__':
@@ -64,7 +63,7 @@ if __name__ == '__main__':
 
 
     execute_dict_id_list = []
-    for idx in range(1, 384):
+    for idx in range(20000, 20384):
         execute_dict_id_list.append(idx)
 
     now = datetime.now() # current date and time
@@ -72,7 +71,7 @@ if __name__ == '__main__':
     folder_dir = f"G:/我的雲端硬碟/leiden_university_course_materials/bioinformatics_sem2/introduction_to_deep_learning/asm2/result/"
     result_output_file = folder_dir + date_time_str + "_result_cnn_fashion_output.csv"
     result_backup_output_file = folder_dir + date_time_str + "_result_cnn_fashion_output_backup.csv"
-    export_output_interval: int = 20
+    export_output_interval: int = 1
 
 
     dict_id_list: list = []
