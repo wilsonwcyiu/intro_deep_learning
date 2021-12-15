@@ -6,7 +6,7 @@ from tensorflow.keras.datasets import mnist
 
 import pandas as pd
 
-# from asm2.hyper_para_mlp_dict import hyper_para_mlp_dict
+# from asm_2.hyper_para_mlp_dict import hyper_para_mlp_dict
 
 
 if __name__ == '__main__':
