@@ -2,12 +2,10 @@ import random
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
-import cv2
 import numpy as np
-from sklearn.model_selection import train_test_split
+import pandas as pd
 
-from tensorflow.keras.layers import Dense, RNN, LSTM, Flatten, TimeDistributed, LSTMCell
-from tensorflow.keras.layers import RepeatVector, Conv2D, SimpleRNN, GRU, Reshape, ConvLSTM2D, Conv2DTranspose
+from sklearn.model_selection import train_test_split
 
 # Global Variables
 unique_characters = '0123456789+- ' # All unique characters that are used in the queries (13 in total: digits 0-9, 2 operands [+, -], and a space character ' '.)
@@ -16,31 +14,127 @@ max_int_length = len(str(highest_integer)) #
 max_query_length = max_int_length * 2 + 1 # Maximum length of the query string (consists of two integers and an operand [e.g. '22+10'])
 max_answer_length = max_int_length + 1    # Maximum length of the answer string
 
+# Savefiles
+queryfile = 'queries_nmax={}.npz'.format(highest_integer)
+
 def main():
-    # Demonstrate generation of minus and plus signs
-    save_generated(generate_images(), 'images/minus_signs.png')
-    save_generated(generate_images(cross=True), 'images/plus_signs.png')
-
-    # Create the data (might take around a minute)
-    (MNIST_data, MNIST_labels), _ = tf.keras.datasets.mnist.load_data()
-    X_text, X_img, y_text, y_img = create_data(highest_integer)
-    print(X_text.shape, X_img.shape, y_text.shape, y_img.shape)
-
-    ## Display the samples that were created
-    for i in range(10):
-        display_sample(
-            n=np.random.randint(0, 80000, 1)[0],
-            fname='images/random_query_{:02d}.png'.format(i)
-            )
-    # One-hot encoding/decoding the text queries/answers so that they can be processed using RNNs
-    # You should use these functions to convert your strings and read out the output of your networks
+    X_text, X_img, y_text, y_img = load_query_data()
     X_text_onehot = encode_labels(X_text)
     y_text_onehot = encode_labels(y_text)
-    print(X_text_onehot.shape, y_text_onehot.shape)
+    # baseline_prediction(X_text_onehot, y_text_onehot)
+    # Train and experiment with the text-to-text RNN Model by using X_text and y_text as your inputs/outputs
+    # 1. Try different ratios of train/test splits
+    # 2. Try to find more optimal architectures
+    text2text = setup_text2text_RNN()
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_text_onehot, y_text_onehot,
+        random_state=13,
+        shuffle=True,
+        train_size=0.9,
+        ) 
+    text2text.fit(
+        x=X_train, y=y_train,
+        validation_data=(X_test, y_test),
+        verbose=1,
+        )
+    choice = np.random.randint(0, len(X_text), size=10)
+    entries = X_text[choice]
+    print(entries)
+    true_answers = y_text[choice] 
+    hot_answers = text2text.predict(encode_labels(entries))
+    answers = decode_labels(hot_answers)
+    for q, a, atrue in zip(entries, answers, true_answers):
+        print('{}={}... {}'.format(q, a, atrue))
+    import pdb; pdb.set_trace()
 
+
+
+def find_best_train_set_size():
+    histories = []
+    test_set_sizes = np.arange(1, 10) * 0.1
+    for ratio in test_set_sizes:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_text_onehot, y_text_onehot,
+            random_state=13,
+            shuffle=True,
+            train_size=ratio,
+            )
+        text2text = setup_text2text_RNN()
+        hist = text2text.fit(
+            x=X_train, y=y_train,
+            validation_data=(X_test, y_test),
+            epochs=10,
+            verbose=1,
+            )
+        histories.append(pd.DataFrame.from_dict(hist.history))
+    plot_training_history(histories)
+
+def plot_training_history(histories):
+    df = pd.concat(histories, axis=1, keys=test_set_sizes)
+    df.columns = df.columns.swaplevel()
+
+    fig, ax = plt.subplots(figsize=(8,5))
+    df['loss'].plot(ax=ax, legend=False)
+    df['val_loss'].plot(ax=ax, linestyle='--', legend=False)
+    ax.set_xlabel("Training Epoch")
+    ax.set_ylabel("Loss")
+    ax.legend(bbox_to_anchor=(1, 1))
+    plt.tight_layout()
+    plt.savefig(
+        "images/loss_maxint={}.png".format(highest_integer), 
+        dpi=300
+        )
+    plt.close()
+
+    fig, ax = plt.subplots(figsize=(8,5))
+    df['accuracy'].plot(ax=ax, legend=False)
+    df['val_accuracy'].plot(ax=ax, linestyle='--', legend=False)
+    ax.set_xlabel("Training Epoch")
+    ax.set_ylabel("Accuracy")
+    ax.legend(bbox_to_anchor=(1, 1))
+    plt.tight_layout()
+    plt.savefig(
+        "images/accuracy_maxint={}.png".format(highest_integer),
+        dpi=300
+        )
+
+def plot_single_training_history(history, fname):
+    h_df = pd.DataFrame.from_dict(history.history)
+    fig, ax = plt.subplots()
+    ax = h_df.plot(figsize=(8,5))
+    ax.set_xlabel("Training Epoch")
+    ax.set_ylabel("Regression Error Measure")
+    plt.tight_layout()
+    plt.savefig(fname, dpi=300)
+
+
+def baseline_prediction(X, y):
+    y = y.reshape(-1, max_answer_length * len(unique_characters))
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Flatten(
+            input_shape=(max_query_length, len(unique_characters))
+            ),
+        tf.keras.layers.Dense(max_answer_length * len(unique_characters))
+        ])
+    model.compile(
+        loss='categorical_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+        )
+    model.summary()
+    h = model.fit(
+        x=X, y=y,
+        epochs=10,
+        verbose=0,
+        )
+    plot_single_training_history(h, 'images/baseline_maxint={}.png'.format(highest_integer))
+
+
+
+
+def setup_text2text_RNN():
     # We start by initializing a sequential model
     text2text = tf.keras.Sequential()
-
     """
     Encode the input sequence using an RNN, producing an output of size 256.
     In this case the size of our input vectors is [7, 13] as we have queries 
@@ -52,7 +146,7 @@ def main():
     input_shape=(None, unique_characters).
     """
     text2text.add(
-        LSTM(
+        tf.keras.layers.LSTM(
             units=256,
             input_shape=(max_query_length, len(unique_characters))
             )
@@ -64,7 +158,7 @@ def main():
     In other words, the RNN will always produce 4 characters as its output.
     """
     text2text.add(
-        RepeatVector(max_answer_length)
+        tf.keras.layers.RepeatVector(max_answer_length)
         )
     """
     By setting return_sequences to True, return not only the last output but
@@ -73,7 +167,7 @@ def main():
     dimension to be the timesteps.
     """
     text2text.add(
-        LSTM(
+        tf.keras.layers.LSTM(
             units=128,
             return_sequences=True
             )
@@ -83,8 +177,8 @@ def main():
     step of the output sequence, decide which character should be chosen.
     """
     text2text.add(
-        TimeDistributed(
-            Dense(len(unique_characters), activation='softmax')
+        tf.keras.layers.TimeDistributed(
+            tf.keras.layers.Dense(len(unique_characters), activation='softmax')
             )
         )
     """
@@ -97,7 +191,7 @@ def main():
         metrics=['accuracy']
         )
     text2text.summary()
-
+    return text2text
 
 def generate_images(cross=False, n=50):
     """
@@ -111,6 +205,7 @@ def generate_images(cross=False, n=50):
         A np.ndarray op dim (n, 28, 28) containing n 28x28 images of the 
         specified sign.
     """
+    import cv2
 
     x = np.random.randint(12, 16, (n, 2))
     y1 = np.random.randint(4, 8, n)
@@ -157,7 +252,8 @@ def create_data(highest_integer):
 
     Images for digits are picked randomly from the whole MNIST dataset.
     """
-
+    print("Creating Data")
+    (MNIST_data, MNIST_labels), _ = tf.keras.datasets.mnist.load_data()
     num_indices = [np.where(MNIST_labels==x) for x in range(10)]
     num_data = [MNIST_data[inds] for inds in num_indices]
     image_mapping = dict(zip(unique_characters[:10], num_data))
@@ -231,8 +327,26 @@ def encode_labels(labels, max_len=4):
     return one_hot 
 
 def decode_labels(labels):
-    pred = np.argmax(labels, axis=1)
-    predicted = ''.join([unique_characters[i] for i in pred])
+    pred = np.argmax(labels, axis=2)
+    decoded_predictions = []
+    for pred_i in pred:
+        seq = ''.join([unique_characters[i] for i in pred_i])
+        decoded_predictions.append(seq)
+    return decoded_predictions
 
-    return predicted
+def load_query_data():
+    try:
+        with open(queryfile, 'rb') as f:
+            data = np.load(f)
+            X_text = data['arr_0']
+            X_img = data['arr_1']
+            y_text = data['arr_2']
+            y_img = data['arr_3']
+    except:
+        X_text, X_img, y_text, y_img = create_data(highest_integer)
+        with open(queryfile, 'wb') as f:
+            np.savez(f, X_text, X_img, y_text, y_img)
+    return X_text, X_img, y_text, y_img
 
+if __name__ == '__main__':
+    main()

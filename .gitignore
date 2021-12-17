@@ -1,4 +1,9 @@
 __pycache__
+images/
+keras_models/
+.ipynb_checkpoints/
 *.pyc
 *.zip
 *.png
+*.npz
+*.tex
